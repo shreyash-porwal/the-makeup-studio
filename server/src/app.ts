@@ -1,5 +1,7 @@
 import express from "express";
-import { sendEmail } from "./config/nodemailer.js";
+import { sendMail } from "./config/nodemailer.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+import userRoutes from "./routes/userRoutes.js";
 const app = express();
 
 // Middleware
@@ -14,7 +16,12 @@ app.post("/send-mail", async (req, res) => {
   const { to, subject, message } = req.body;
 
   try {
-    await sendEmail(to, subject, message, `<p>${message}</p>`);
+    await sendMail({
+      from: "THE MAKEUP STUDIO",
+      to: to,
+      subject: subject,
+      html: `<p>${message}</p>`,
+    });
     res
       .status(200)
       .json({ success: true, message: "Email sent successfully!" });
@@ -25,4 +32,7 @@ app.post("/send-mail", async (req, res) => {
     });
   }
 });
+app.use("/api/v1", userRoutes);
+
+app.use(errorMiddleware);
 export default app;
