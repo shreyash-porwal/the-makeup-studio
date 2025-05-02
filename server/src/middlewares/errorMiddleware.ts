@@ -1,5 +1,23 @@
-import { ErrorRequestHandler, NextFunction, Request, Response } from "express";
+import {
+  ErrorRequestHandler,
+  NextFunction,
+  Request,
+  RequestHandler,
+  Response,
+} from "express";
 import { errorResponse } from "../utils/genericResponse.js";
+import { ControllerType } from "../types/commonTypes.js";
+import { CustomRequest } from "../types/reqResTypes/responseTypes.js";
+
+export const TryCatch =
+  (func: ControllerType): RequestHandler =>
+  async (req: CustomRequest, res: Response, next: NextFunction) => {
+    try {
+      await func(req, res, next);
+    } catch (err) {
+      next(err);
+    }
+  };
 
 export const errorMiddleware: ErrorRequestHandler = (
   err: any,

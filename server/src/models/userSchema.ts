@@ -1,5 +1,5 @@
-import mongoose, { Schema, model } from "mongoose";
-import { UserType } from "../types/userType.js";
+import mongoose, { Schema, model,Document } from "mongoose";
+import { UserType } from "../types/authType.js";
 const UserSchema = new Schema<UserType>(
   {
     name: { type: String, required: [true, "Name is required"] },
@@ -13,6 +13,12 @@ const UserSchema = new Schema<UserType>(
       type: String,
       enum: ["Male", "Female", "Other"],
       default: "Female",
+      required: true,
+    },
+    role: {
+      type: String,
+      enum: ["User", "Admin"],
+      default: "User",
       required: true,
     },
     dob: { type: Date, required: [true, "date of birth is required"] },

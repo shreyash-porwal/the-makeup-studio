@@ -1,5 +1,5 @@
 import { Request } from "express";
-import { UserType } from "../userType.js";
+import { UserType } from "../authType.js";
 export interface ApiResponse<T> {
   success: boolean;
   data?: T;

@@ -2,14 +2,17 @@ import express from "express";
 import { sendMail } from "./config/nodemailer.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import userRoutes from "./routes/userRoutes.js";
+import { authorizeUser, roleAuthorization } from "./middlewares/authMiddleware.js";
+import { CustomRequest } from "./types/reqResTypes/responseTypes.js";
+import cookieParser from "cookie-parser";
 const app = express();
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
-// Routes
-app.get("/", (req, res) => {
-  res.send("Hello from Express with TypeScript!");
+app.get("/hello", authorizeUser,roleAuthorization(["Admin"]), (req:CustomRequest, res) => {
+  res.send(`Hello ${req.user?.email} from Express with TypeScript!`);
 });
 
 app.post("/send-mail", async (req, res) => {
