@@ -21,6 +21,7 @@
     "joi": "^17.13.3",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^8.14.0",
+    "multer": "^1.4.5-lts.2",
     "nodemailer": "^6.10.1"
   },
   "devDependencies": {
@@ -28,6 +29,7 @@
     "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
     "@types/mongoose": "^5.11.96",
+    "@types/multer": "^1.4.12",
     "@types/node": "^22.15.3",
     "@types/nodemailer": "^6.4.17",
     "nodemon": "^3.1.10",

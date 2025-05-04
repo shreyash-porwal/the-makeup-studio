@@ -1,4 +1,4 @@
-import mongoose, { Schema, model,Document } from "mongoose";
+import { Schema, model } from "mongoose";
 import { UserType } from "../types/authType.js";
 const UserSchema = new Schema<UserType>(
   {
