@@ -1,34 +1,34 @@
-import { Response, NextFunction, RequestHandler } from "express";
-import jwt, { JwtPayload } from "jsonwebtoken";
 import ErrorHandler from "../utils/customError.js";
-import { errorResponse } from "../utils/genericResponse.js";
+import jwt, { JwtPayload } from "jsonwebtoken";
+import { NextFunction, RequestHandler, Response } from "express";
 import { CustomRequest } from "../types/reqResTypes/responseTypes.js";
-import { UserType } from "../types/authType.js";
 import { TryCatch } from "./errorMiddleware.js";
-
+import { errorResponse } from "../utils/genericResponse.js";
+import { UserType } from "../types/masters/userType.js";
+import dotenv from "dotenv";
+dotenv.config();
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) throw new ErrorHandler("JWT_SECRET not defined", 400);
 
-export const authorizeUser = TryCatch(
+export const auth = TryCatch(
   async (req: CustomRequest, res: Response, next: NextFunction) => {
-    const authHeader = req.headers.authorization;
-
-    
-    const token = authHeader?.split(" ")[1] || req.cookies.token;
-    
+    // Extracting JWT from request cookies, body or header
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
     if (!token) {
-      return res.status(401).json({ message: "No token provided" });
+      return res.status(401).json(errorResponse("Unauthorized"));
     }
 
-    if (token == null) {
-      return next(
-        new ErrorHandler("Please login to access this resource", 403)
-      );
+    // If JWT is missing, return 401 Unauthorized response
+    if (!token) {
+      return res.status(401).json(errorResponse(`Token Missing`));
     }
-
     try {
-      const decoded = jwt.verify(token, JWT_SECRET);
-      req.user = decoded as UserType;
+      // Verifying the JWT using the secret key stored in environment variables
+      const decode = await jwt.verify(token, JWT_SECRET);
+      console.log(decode);
+      req.user = decode as UserType;
+
+      // If JWT is valid, move on to the next middleware or request handler
       next();
     } catch (err) {
       return res.status(401).json(errorResponse("Invalid or expired token"));
@@ -41,6 +41,7 @@ export const roleAuthorization = (allowedRoles: string[]): RequestHandler => {
     async (req: CustomRequest, res: Response, next: NextFunction) => {
       const user = req.user;
       if (!user || !allowedRoles.includes(user.role)) {
+        console.log(user);
         return res
           .status(403)
           .json(errorResponse("Access forbidden: invalid role"));

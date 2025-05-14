@@ -7,7 +7,7 @@ import {
   deleteServiceCategory,
 } from "../../../controllers/admin/services/serviceCategoryController.js";
 import {
-  authorizeUser,
+  auth,
   roleAuthorization,
 } from "../../../middlewares/authMiddleware.js";
 
@@ -16,7 +16,7 @@ const router = express.Router();
 // POST: Create a new service category
 router.post(
   "/createServiceCategory",
-  authorizeUser,
+  auth,
   roleAuthorization(["Admin"]),
   createServiceCategory
 );
@@ -27,14 +27,14 @@ router.get("/getServiceCategory/:id", getServiceCategoryById);
 // PUT: Update a service category by ID
 router.put(
   "/updateServiceCategory/:id",
-  authorizeUser,
+  auth,
   roleAuthorization(["Admin"]),
   updateServiceCategory
 );
 // DELETE: Delete a service category by ID
 router.delete(
   "/deleteServiceCategory/:id",
-  authorizeUser,
+  auth,
   roleAuthorization(["Admin"]),
   deleteServiceCategory
 );

@@ -19,11 +19,12 @@ export const sendMail = async (mailOptions: {
   subject: string;
   html: string;
 }) => {
-  await transporter.sendMail(mailOptions, (error, info) => {
+  let info = await transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
       console.log("Error:", error);
     } else {
       console.log("Email sent:", info.response);
     }
+    return info;
   });
 };
