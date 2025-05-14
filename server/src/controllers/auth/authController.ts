@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import { User } from "../../models/masters/userSchema.js";
 import { errorResponse, successResponse } from "../../utils/genericResponse.js";
 import { LogInType, SignUpType } from "../../types/auth/authType.js";
@@ -12,7 +12,8 @@ import ErrorHandler from "../../utils/customError.js";
 import { CustomRequest } from "../../types/reqResTypes/responseTypes.js";
 import otpGenerator from "otp-generator";
 import OTP from "../../models/auth/OTP.js";
-
+const JWT_SECRET = process.env.JWT_SECRET!;
+if (!JWT_SECRET) throw new ErrorHandler("JWT_SECRET not defined", 400);
 export const sendOtp = TryCatch(
   async (
     req: Request,
@@ -188,8 +189,26 @@ export const logout = TryCatch(
       secure: process.env.NODE_ENV === "production",
       sameSite: "strict",
     });
-    localStorage.setItem("token", "");
     req.user = null;
     return res.status(200).json(successResponse("Logged out successfully"));
   }
 );
+
+export const me = TryCatch(async (req: CustomRequest, res: Response) => {
+  try {
+    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+
+    if (!token) {
+      return res.status(200).json(successResponse(null, "User not logged in"));
+    }
+
+    const decode = jwt.verify(token, JWT_SECRET);
+    const { iat, exp, ...user } = decode as any;
+
+    return res.status(200).json(successResponse(user, "User Verified"));
+  } catch (err) {
+    return res
+      .status(200)
+      .json(successResponse(null, "Invalid or expired token"));
+  }
+});

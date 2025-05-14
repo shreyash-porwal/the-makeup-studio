@@ -7,7 +7,10 @@ import {
   logIn,
   signUp,
   sendOtp,
+  me,
+  logout,
 } from "../../controllers/auth/authController.js";
+import { auth } from "../../middlewares/authMiddleware.js";
 // import auth from "../../middlewares/authMiddleware.js";
 // ********************************************************************************************************
 //                                      Authentication routes
@@ -22,4 +25,7 @@ router.post("/signup", signUp);
 // Route for sending OTP to the user's email
 router.post("/sendotp", sendOtp);
 
+router.get("/me", me);
+
+router.post("/logout", auth, logout);
 export default router;

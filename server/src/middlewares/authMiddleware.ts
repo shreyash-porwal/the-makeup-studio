@@ -26,9 +26,8 @@ export const auth = TryCatch(
       // Verifying the JWT using the secret key stored in environment variables
       const decode = await jwt.verify(token, JWT_SECRET);
       console.log(decode);
-      req.user = decode as UserType;
-
-      // If JWT is valid, move on to the next middleware or request handler
+      const { iat, exp, ...user } = decode as any;
+      req.user = user as UserType;
       next();
     } catch (err) {
       return res.status(401).json(errorResponse("Invalid or expired token"));
