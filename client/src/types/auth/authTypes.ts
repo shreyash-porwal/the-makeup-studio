@@ -5,7 +5,23 @@ export type LoginPayload = {
 
 export type User = {
   _id: string;
-  name: string;
+  firstName: string;
+  lastName: string;
   email: string;
-  role?: string;
+  role: "Admin" | "User";
+  dob?: string;
+  gender?: string;
+  createdAt?: string;
+  updatedAt?: string;
+};
+
+export type RegisterFormData = {
+  firstName: string;
+  lastName: string;
+  email: string;
+  password: string;
+  confirmPassword: string;
+  dob: Date | null;
+  gender: string;
+  otp?: string;
 };

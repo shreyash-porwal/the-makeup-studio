@@ -11,3 +11,11 @@ export const endpoints = {
   RESETPASSTOKEN_API: BASE_URL + "/auth/reset-password-token",
   RESETPASSWORD_API: BASE_URL + "/auth/reset-password",
 };
+
+export const categoriesEndpoints = {
+  GET_CATEGORIES: BASE_URL + "/services",
+  // GET_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
+  // CREATE_CATEGORY: BASE_URL + "/categories",
+  // UPDATE_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
+  // DELETE_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
+};

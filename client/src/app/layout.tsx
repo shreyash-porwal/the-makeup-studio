@@ -24,12 +24,12 @@ export default function RootLayout({
           <AppInitializer>
             <Navbar />
             <Toaster richColors />
-            <main className="min-h-screen">{children}</main>
-            <footer className="bg-blue-50 py-12">
+            <main className="pt-20 min-h-screen">{children}</main>
+            {/* <footer className="bg-blue-50 py-12">
               <div className="container mx-auto px-4 text-center">
                 Made with love by shreyash
               </div>
-            </footer>
+            </footer> */}
           </AppInitializer>
         </ReduxProvider>
       </body>

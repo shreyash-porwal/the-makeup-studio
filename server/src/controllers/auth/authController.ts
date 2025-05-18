@@ -14,6 +14,7 @@ import otpGenerator from "otp-generator";
 import OTP from "../../models/auth/OTP.js";
 const JWT_SECRET = process.env.JWT_SECRET!;
 if (!JWT_SECRET) throw new ErrorHandler("JWT_SECRET not defined", 400);
+
 export const sendOtp = TryCatch(
   async (
     req: Request,
@@ -59,8 +60,10 @@ export const signUp = TryCatch(
     res: Response
   ): Promise<Response<any, Record<string, any>> | void> => {
     const reqObj: SignUpType = req.body;
+    reqObj.role = "User";
+    console.log("inside signup function =========", reqObj);
     const validatedData = validateWithSchema<SignUpType>(SignUpSchema, reqObj);
-
+    console.log("inside signup function");
     // Check if password and confirm password match
     if (validatedData.password !== validatedData.confirmPassword) {
       return res
@@ -121,7 +124,7 @@ export const logIn = TryCatch(
     res: Response
   ): Promise<Response<any, Record<string, any>> | void> => {
     const reqObj: LogInType = req.body;
-    console.log("INside login function");
+    // console.log("INside login function");
     try {
       const validObj = validateWithSchema<LogInType>(logInSchema, reqObj);
       const userObj = await User.findOne({ email: validObj.email });
@@ -146,31 +149,41 @@ export const logIn = TryCatch(
         "-password"
       );
 
-      let expiresIn: number =
-        Number(process.env.JWT_EXPIRES_IN) * 3600 * 24 || 3600 * 24 * 5;
-      const token = jwt.sign({ user }, process.env.JWT_SECRET as string, {
-        expiresIn: Number(expiresIn),
-      });
+      if (user) {
+        let expiresIn: number =
+          Number(process.env.JWT_EXPIRES_IN) * 3600 * 24 || 3600 * 24 * 5;
 
-      if (!token) {
-        throw new ErrorHandler("Token creation failed!!", 500);
+        const token = jwt.sign(
+          user.toJSON(),
+          process.env.JWT_SECRET as string,
+          {
+            expiresIn: Number(expiresIn),
+          }
+        );
+
+        if (!token) {
+          throw new ErrorHandler("Token creation failed!!", 500);
+        }
+
+        const cookieExpiresDays: number =
+          Number(process.env.COOKIE_EXPIRES_DAYS) || 5;
+
+        const options = {
+          expires: new Date(
+            Date.now() + cookieExpiresDays * 24 * 60 * 60 * 1000
+          ),
+          maxAge: cookieExpiresDays * 24 * 60 * 60 * 1000,
+          httpOnly: true,
+          secure: process.env.NODE_ENV === "production", // use true in prod
+          sameSite: "strict" as const,
+        };
+        return res
+          .status(200)
+          .cookie("token", token, options)
+          .json(successResponse(user, "Login successful"));
       }
 
-      const cookieExpiresDays: number =
-        Number(process.env.COOKIE_EXPIRES_DAYS) || 5;
-
-      const options = {
-        expires: new Date(Date.now() + cookieExpiresDays * 24 * 60 * 60 * 1000),
-        maxAge: cookieExpiresDays * 24 * 60 * 60 * 1000,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === "production", // use true in prod
-        sameSite: "strict" as const,
-      };
-
-      return res
-        .status(200)
-        .cookie("token", token, options)
-        .json(successResponse({ token, user }, "Login successful"));
+      return res.status(404).json(errorResponse("User not found"));
     } catch (err: any) {
       return res
         .status(500)
@@ -196,16 +209,23 @@ export const logout = TryCatch(
 
 export const me = TryCatch(async (req: CustomRequest, res: Response) => {
   try {
-    const token = req.cookies.token || req.headers.authorization?.split(" ")[1];
+    const token =
+      req.cookies.token ||
+      req.headers.authorization?.split(" ")[1] ||
+      req.cookies.get("token")?.value;
 
     if (!token) {
-      return res.status(200).json(successResponse(null, "User not logged in"));
+      return res
+        .status(200)
+        .json(errorResponse("User not authenticated,No token Present"));
     }
 
-    const decode = jwt.verify(token, JWT_SECRET);
-    const { iat, exp, ...user } = decode as any;
+    const decoded = jwt.verify(token, JWT_SECRET);
+    if (!decoded) {
+      return res.status(200).json(errorResponse("Invalid token"));
+    }
 
-    return res.status(200).json(successResponse(user, "User Verified"));
+    return res.status(200).json(successResponse(decoded, "User Verified"));
   } catch (err) {
     return res
       .status(200)

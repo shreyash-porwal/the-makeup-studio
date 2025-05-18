@@ -13,6 +13,6 @@ export const validateWithSchema = <T>(schema: Schema, data: any): T => {
   if (error) {
     throw new ErrorHandler(`Validation Error: ${error.message}`, 400);
   }
-  console.log("value", data);
+  // console.log("value", data);
   return value as T;
 };

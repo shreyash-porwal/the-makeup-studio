@@ -11,7 +11,7 @@ export type SignUpType = {
   role: "User" | "Admin";
   dob: Date;
   otp?: string;
-  otpExpiry?: Date;
+  // otpExpiry?: Date;
 };
 
 export type LogInType = {

@@ -31,12 +31,52 @@ export const createServiceCategory = TryCatch(
 );
 
 // READ all categories
+// export const getAllServiceCategories = TryCatch(
+//   async (req: CustomRequest, res: Response) => {
+//     const categories = await ServiceCategory.find().sort({ createdAt: -1 });
+//     return res
+//       .status(200)
+//       .json(successResponse(categories, "All categories fetched successfully"));
+//   }
+// );
 export const getAllServiceCategories = TryCatch(
   async (req: CustomRequest, res: Response) => {
-    const categories = await ServiceCategory.find().sort({ createdAt: -1 });
-    return res
-      .status(200)
-      .json(successResponse(categories, "All categories fetched successfully"));
+    const page = parseInt(req.query.page as string) || 1;
+    const perPage = parseInt(req.query.perPage as string) || 10;
+    const search = (req.query.search as string) || "";
+    const sortField = (req.query.sortField as string) || "createdAt";
+    const sortOrder = req.query.sortOrder === "asc" ? 1 : -1;
+
+    const skip = (page - 1) * perPage;
+
+    // Build filter condition
+    const filter = search
+      ? {
+          $or: [
+            { catName: { $regex: search, $options: "i" } },
+            { catDescription: { $regex: search, $options: "i" } },
+          ],
+        }
+      : {};
+
+    // Fetch data with pagination, sorting, and filtering
+    const [categories, total] = await Promise.all([
+      ServiceCategory.find(filter)
+        .sort({ [sortField]: sortOrder })
+        .skip(skip)
+        .limit(perPage),
+      ServiceCategory.countDocuments(filter),
+    ]);
+
+    return res.status(200).json(
+      successResponse(
+        {
+          data: categories,
+          total,
+        },
+        "Service categories fetched successfully"
+      )
+    );
   }
 );
 

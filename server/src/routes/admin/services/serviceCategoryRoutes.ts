@@ -21,7 +21,7 @@ router.post(
   createServiceCategory
 );
 // GET: Get all service categories
-router.get("/getAllServiceCategories", getAllServiceCategories);
+router.get("/categories", getAllServiceCategories);
 // GET: Get a service category by ID
 router.get("/getServiceCategory/:id", getServiceCategoryById);
 // PUT: Update a service category by ID
