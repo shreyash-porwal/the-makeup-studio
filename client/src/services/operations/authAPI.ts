@@ -66,7 +66,7 @@ export function login(
         }
         const userImage = `https://api.dicebear.com/5.x/initials/svg?seed=${user.firstName} ${user.lastName}`;
         console.log("User Image URL:", userImage);
-        dispatch(setUser({ user }));
+        dispatch(setUser(user));
         navigate(
           user.role === "Admin" ? "/admin-dashboard" : "/user-dashboard"
         );

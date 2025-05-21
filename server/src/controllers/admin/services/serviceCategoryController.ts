@@ -17,7 +17,6 @@ export const createServiceCategory = TryCatch(
     res: Response
   ): Promise<Response<any, Record<string, any>> | void> => {
     const reqObjCategory: ServiceCategoryType = req.body;
-
     const validateReqObj = validateWithSchema<ServiceCategoryType>(
       serviceCategorySchema,
       reqObjCategory

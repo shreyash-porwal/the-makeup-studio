@@ -2,7 +2,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="w-full min-h-screen bg-gray-100">
+    <div className="w-full h-full bg-gray-100">
       <div className="flex flex-col-reverse md:flex-row items-center justify-between px-6 md:px-12 py-12 md:py-24 gap-10">
         {/* Left Text Section */}
         <div className="w-full md:w-1/2 text-center md:text-left">

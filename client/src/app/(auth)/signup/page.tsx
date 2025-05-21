@@ -57,15 +57,16 @@ const SignUpPage = () => {
   const password = watch("password");
 
   return (
-    <div className="min-h-screen w-full flex items-center justify-center my-8 mt-20">
-      <div className="w-full max-w-md p-8 rounded-md border border-gray-600 shadow-lg">
+    <div className="min-h-screen w-full flex items-center justify-center px-4 py-8 bg-gray-100">
+      <div className="w-full max-w-md p-6 sm:p-8 rounded-md border shadow-lg">
         <h1 className="text-2xl font-semibold text-richblack-5 mb-6 text-center">
           Create an account
         </h1>
 
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-          <div className="flex gap-4">
-            <div className="w-1/2">
+          {/* First and Last Name */}
+          <div className="flex flex-col sm:flex-row gap-4">
+            <div className="w-full sm:w-1/2">
               <label className="text-sm text-richblack-5">
                 First Name <sup className="text-pink-500">*</sup>
               </label>
@@ -83,7 +84,7 @@ const SignUpPage = () => {
               )}
             </div>
 
-            <div className="w-1/2">
+            <div className="w-full sm:w-1/2">
               <label className="text-sm text-richblack-5">
                 Last Name <sup className="text-pink-500">*</sup>
               </label>
@@ -100,6 +101,7 @@ const SignUpPage = () => {
             </div>
           </div>
 
+          {/* Email */}
           <div>
             <label className="text-sm text-richblack-5">
               Email Address <sup className="text-pink-500">*</sup>
@@ -116,6 +118,7 @@ const SignUpPage = () => {
             )}
           </div>
 
+          {/* Gender */}
           <div>
             <label className="text-sm text-richblack-5">
               Gender <sup className="text-pink-500">*</sup>
@@ -136,8 +139,9 @@ const SignUpPage = () => {
             )}
           </div>
 
-          <div className="w-full flex justify-between items-center">
-            <label className="text-sm text-richblack-5 w-1/3">
+          {/* DOB */}
+          <div>
+            <label className="text-sm text-richblack-5">
               Date of Birth <sup className="text-pink-500">*</sup>
             </label>
             <Controller
@@ -163,6 +167,7 @@ const SignUpPage = () => {
             )}
           </div>
 
+          {/* Password */}
           <div>
             <label className="text-sm text-richblack-5">
               Password <sup className="text-pink-500">*</sup>
@@ -188,6 +193,7 @@ const SignUpPage = () => {
             )}
           </div>
 
+          {/* Confirm Password */}
           <div>
             <label className="text-sm text-richblack-5">
               Confirm Password <sup className="text-pink-500">*</sup>
@@ -217,6 +223,7 @@ const SignUpPage = () => {
             )}
           </div>
 
+          {/* Submit Button */}
           <button
             type="submit"
             className="w-full bg-yellow-50 text-richblack-900 font-semibold rounded-md py-2 hover:bg-yellow-200 transition-colors duration-200"

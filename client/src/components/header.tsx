@@ -9,13 +9,13 @@ export default function Navbar() {
 
   return (
     <header className="fixed top-0 w-full backdrop-blur-md z-50 border-b text-black bg-white/90">
-      <nav className="mx-auto max-w-7xl px-4 py-4 flex items-center justify-between">
+      <nav className="mx-auto max-w-screen-xl px-4 sm:px-6 lg:px-8 xl:px-8 py-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src={"/logo.png"}
+            src="/logo.png"
             alt="the-makeup-studio"
-            width={200}
+            width={180}
             height={60}
             className="h-12 w-auto object-contain"
           />

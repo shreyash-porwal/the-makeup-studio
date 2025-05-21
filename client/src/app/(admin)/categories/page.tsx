@@ -3,11 +3,21 @@
 import React, { useState, useEffect, useCallback } from "react";
 import CustomDataTable from "@/components/datatable";
 import { CategoryType } from "@/types/categoryType";
-import { getCategories } from "@/services/operations/categoryAPI";
+import {
+  deleteCategory,
+  getCategories,
+} from "@/services/operations/categoryAPI";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
+const MySwal = withReactContent(Swal);
 
 const Category = () => {
+  const [confirmOpen, setConfirmOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
   const [categories, setCategories] = useState<CategoryType[]>([]);
   const [loading, setLoading] = useState(false);
   const [totalRows, setTotalRows] = useState(0);
@@ -87,7 +97,61 @@ const Category = () => {
       sortable: true,
       field: "catDescription",
     },
+    {
+      name: "Actions",
+      cell: (row: CategoryType) => (
+        <div className="flex space-x-2 my-1">
+          <Button
+            variant="outline"
+            className="text-blue-600 border-blue-600"
+            onClick={() => router.push(`/categories/${row._id}`)}
+          >
+            Edit
+          </Button>
+
+          <Button
+            variant={"destructive"}
+            // className="text-red-600 border border-red-600 px-4 py-2 rounded hover:bg-red-600 hover:text-white transition"
+            onClick={() => handleDeleteConfirm(row._id)}
+          >
+            Delete
+          </Button>
+        </div>
+      ),
+    },
   ];
+
+  const handleDeleteConfirm = (id: string) => {
+    MySwal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#d33",
+      cancelButtonColor: "#3085d6",
+      confirmButtonText: "Yes, delete it!",
+      cancelButtonText: "Cancel",
+      reverseButtons: true,
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        const res = await handleDelete(id);
+        console.log("Resss", res);
+        if (res?.success == true) {
+          toast.success(res.data);
+          // MySwal.fire("Deleted!", "Your record has been deleted.", "success");
+          fetchCategories();
+        }
+      }
+    });
+  };
+
+  // Your actual delete function
+  const handleDelete = async (id: string) => {
+    // your delete logic here (API call, state update, etc.)
+    console.log("Deleted id:", id);
+    const res = await deleteCategory(id);
+    return res;
+  };
 
   return (
     <div>
@@ -115,7 +179,7 @@ const Category = () => {
         <Button
           type="button"
           variant="outline"
-          onClick={() => router.push("/categories/create")}
+          onClick={() => router.push("/categories/new")}
           className=" px-4 py-2 rounded hover: transition"
         >
           Add Category

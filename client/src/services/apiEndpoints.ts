@@ -14,8 +14,11 @@ export const endpoints = {
 
 export const categoriesEndpoints = {
   GET_CATEGORIES: BASE_URL + "/services",
-  // GET_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
-  // CREATE_CATEGORY: BASE_URL + "/categories",
-  // UPDATE_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
-  // DELETE_CATEGORY: (id: string) => `${BASE_URL}/categories/${id}`,
+  GET_CATEGORY_BY_ID: (id: string) =>
+    BASE_URL + `/services/getServiceCategory/${id}`,
+  CREATE_CATEGORY: BASE_URL + "/services/create-category",
+  UPDATE_CATEGORY: (id: string) =>
+    `${BASE_URL}/services/updateServiceCategory/${id}`,
+  DELETE_CATEGORY: (id: string) =>
+    BASE_URL + `/services/categories/delete/${id}`,
 };

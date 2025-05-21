@@ -27,14 +27,13 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ onMenuToggle }) => {
   if (loading) return;
 
   return (
-    <header className="fixed top-0 w-full backdrop-blur-md z-50 border-b bg-white text-black shadow">
-      <nav className="mx-auto px-4 py-4 flex items-center justify-between">
-        {/* Left Section: Logo and Toggle */}
+    <header className="fixed top-0 left-0 w-full backdrop-blur-md z-50 border-b bg-white text-black shadow">
+      <nav className="mx-auto px-4 py-4 flex items-center justify-between max-w-7xl">
+        {/* Left: Logo + toggle */}
         <div className="flex items-center gap-4">
-          {/* Logo */}
           <Link href="/admin" className="flex items-center">
             <Image
-              src={"/logo.png"}
+              src="/logo.png"
               alt="the-makeup-studio"
               width={200}
               height={60}
@@ -45,31 +44,16 @@ const AdminNavbar: React.FC<AdminNavbarProps> = ({ onMenuToggle }) => {
             </span>
           </Link>
         </div>
-        <div className="flex ">
-          {/* Right Section: Actions */}
-          <div className="flex items-center gap-x-4 text-sm">
-            {user && (
-              <span className="hidden md:inline font-medium">
-                Welcome, {user?.firstName}
-              </span>
-            )}
 
-            {/* <Link href="/admin-dashboard">
-            <Button variant="ghost" className="text-sm">
-              Dashboard
-            </Button>
-          </Link> */}
+        {/* Right: User + toggle button */}
+        <div className="flex items-center gap-x-4 text-sm">
+          {user && (
+            <span className="hidden md:inline font-medium">
+              Welcome, {user.firstName}
+            </span>
+          )}
 
-            {/* <Button
-              onClick={handleLogout}
-              variant="destructive"
-              className="text-sm"
-            >
-              Logout
-            </Button> */}
-          </div>
-
-          {/* Mobile Sidebar Toggle Button */}
+          {/* Sidebar toggle button for mobile */}
           {onMenuToggle && (
             <button
               onClick={onMenuToggle}

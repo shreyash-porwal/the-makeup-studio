@@ -15,7 +15,7 @@ const router = express.Router();
 
 // POST: Create a new service category
 router.post(
-  "/createServiceCategory",
+  "/create-category",
   auth,
   roleAuthorization(["Admin"]),
   createServiceCategory
@@ -33,7 +33,7 @@ router.put(
 );
 // DELETE: Delete a service category by ID
 router.delete(
-  "/deleteServiceCategory/:id",
+  "/categories/delete/:id",
   auth,
   roleAuthorization(["Admin"]),
   deleteServiceCategory
